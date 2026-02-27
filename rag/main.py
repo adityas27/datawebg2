@@ -8,3 +8,4 @@ while True:
     print("\nQuery Used:\n", response["query_used"])
     print("\nRaw Result:\n", response["raw_result"])
     print("\n---\n")
+    
