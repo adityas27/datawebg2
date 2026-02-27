@@ -20,5 +20,14 @@ class UserResponse(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
-    role: str
     user_id: int
+
+
+class QuestionInput(BaseModel):
+    question: str
+
+class QueryResponse(BaseModel):
+    answer: str
+    sql_query: str
+    columns: list[str]
+    rows: list[list]
