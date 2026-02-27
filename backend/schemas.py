@@ -22,3 +22,15 @@ class Token(BaseModel):
     token_type: str
     role: str
     user_id: int
+
+
+# --- Text-to-SQL schemas ---
+
+class QuestionInput(BaseModel):
+    question: str
+
+class QueryResponse(BaseModel):
+    answer: str
+    sql_query: str
+    result: list | None = None
+    error: str | None = None

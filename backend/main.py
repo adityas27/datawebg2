@@ -7,6 +7,7 @@ from datetime import date
 import json
 import models
 import schemas
+import query_engine
 from database import engine, get_db
 from auth import hash_password, verify_password, create_access_token, get_current_user
 
@@ -65,3 +66,11 @@ def login(
 
     access_token = create_access_token(data={"sub": user.email_id})
     return {"access_token": access_token, "token_type": "bearer", "role": user.role, "user_id": user.id}
+
+
+# --- Text-to-SQL endpoint ---
+
+@app.post("/query", response_model=schemas.QueryResponse)
+def query_data(payload: schemas.QuestionInput):
+    """Accept a natural-language question and return a grounded SQL-based answer."""
+    return query_engine.ask_question(payload.question)
