@@ -22,26 +22,6 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-4">
-            <Button variant="outline" className="w-full">
-              <Github className="w-5 h-5" />
-              Continue with GitHub
-            </Button>
-            <Button variant="outline" className="w-full">
-              <Mail className="w-5 h-5" />
-              Continue with Google
-            </Button>
-          </div>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-neutral-800" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-neutral-500">or</span>
-            </div>
-          </div>
-
-          <div className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium">
                 Email
@@ -106,7 +86,7 @@ export default function LoginPage() {
           </blockquote>
           <div className="flex items-center justify-center gap-3">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary/50" />
-            <span className="text-sm text-neutral-400">@researcher_alex</span>
+            <span className="text-sm text-neutral-400">@Kunal Thakur</span>
           </div>
         </div>
       </div>
