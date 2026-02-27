@@ -1,6 +1,12 @@
 from config import model
 
-def generate_query(question: str, schema: dict) -> str:
+def load_prompt(path):
+    with open(path, "r", encoding="utf-8") as f:
+        return f.read()
+
+def generate_query(question: str, schema: dict):
+
+    system_prompt = load_prompt("prompts/system_prompt_query.txt")
 
     schema_text = ""
     for col, details in schema.items():
@@ -9,23 +15,16 @@ def generate_query(question: str, schema: dict) -> str:
         else:
             schema_text += f"- {col} (numeric)\n"
 
-    prompt = f"""
-You are generating pandas query code.
+    full_prompt = f"""
+{system_prompt}
 
-Allowed columns:
+SCHEMA:
 {schema_text}
-
-Rules:
-- Use ONLY these columns
-- Do NOT invent columns
-- Output ONLY valid pandas code using df
-- Do NOT explain anything
-- Result must be returned as a variable or expression
 
 User Question:
 {question}
 """
 
-    response = model.generate_content(prompt)
+    response = model.generate_content(full_prompt)
 
     return response.text.strip()

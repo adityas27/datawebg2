@@ -1,24 +1,23 @@
 from config import model
 
+def load_prompt(path):
+    with open(path, "r", encoding="utf-8") as f:
+        return f.read()
+
 def generate_answer(question: str, result):
 
-    prompt = f"""
-You are a data analyst.
+    system_prompt = load_prompt("prompts/system_prompt_answer.txt")
 
-Using ONLY the result below, answer the user's question.
-
-Do NOT add any new numbers.
-Do NOT make assumptions.
+    full_prompt = f"""
+{system_prompt}
 
 Question:
 {question}
 
 Query Result:
 {result}
-
-Provide a clear business explanation.
 """
 
-    response = model.generate_content(prompt)
+    response = model.generate_content(full_prompt)
 
     return response.text.strip()
