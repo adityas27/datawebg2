@@ -1,13 +1,14 @@
-from fastapi import FastAPI, Depends, Form, HTTPException, status
+from fastapi import FastAPI, Depends, Form, HTTPException, status, UploadFile, File
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import date
 import json
+import os
 import models
 import schemas
-from database import engine, get_db
+from database import engine, get_db, load_csv_to_sqlite
 from auth import hash_password, verify_password, create_access_token, get_current_user
 
 models.Base.metadata.create_all(bind=engine)
@@ -65,3 +66,47 @@ def login(
 
     access_token = create_access_token(data={"sub": user.email_id})
     return {"access_token": access_token, "token_type": "bearer", "role": user.role, "user_id": user.id}
+
+
+@app.post("/upload")
+def upload_csv(file: UploadFile = File(...)):
+    """
+    Upload CSV file and load data into SQLite database.
+    
+    Accepts CSV file, cleans column names, and loads into data_table.
+    """
+    temp_file_path = "temp.csv"
+    
+    try:
+        # Validate file type
+        if not file.filename.endswith('.csv'):
+            raise HTTPException(
+                status_code=400,
+                detail="Only CSV files are allowed"
+            )
+        
+        # Save uploaded file temporarily
+        with open(temp_file_path, "wb") as buffer:
+            content = file.file.read()
+            buffer.write(content)
+        
+        # Load CSV into SQLite
+        result = load_csv_to_sqlite(temp_file_path)
+        
+        return {
+            "message": "File uploaded and data loaded successfully",
+            "columns": result["columns"],
+            "rows_loaded": result["rows_loaded"]
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to process CSV file: {str(e)}"
+        )
+    finally:
+        # Clean up temporary file
+        if os.path.exists(temp_file_path):
+            os.remove(temp_file_path)
