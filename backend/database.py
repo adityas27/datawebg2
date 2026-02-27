@@ -21,12 +21,13 @@ def get_db():
         db.close()
 
 
-def load_csv_to_sqlite(file_path: str) -> dict:
+def load_csv_to_sqlite(file_path: str, table_name: str) -> dict:
     """
     Load CSV file into SQLite database.
     
     Args:
         file_path: Path to the CSV file
+        table_name: Name of the table to create
         
     Returns:
         dict with columns and rows_loaded
@@ -46,7 +47,7 @@ def load_csv_to_sqlite(file_path: str) -> dict:
         conn = sqlite3.connect("app.db")
         
         # Load data into SQLite, replacing existing table
-        df.to_sql("data_table", conn, if_exists="replace", index=False)
+        df.to_sql(table_name, conn, if_exists="replace", index=False)
         
         # Get metadata
         columns = df.columns.tolist()
@@ -60,3 +61,22 @@ def load_csv_to_sqlite(file_path: str) -> dict:
     finally:
         if conn:
             conn.close()
+
+
+
+def get_table_columns(table_name: str) -> list[str]:
+    """
+    Get column names for a specific table.
+    
+    Args:
+        table_name: Name of the table
+        
+    Returns:
+        List of column names
+    """
+    conn = sqlite3.connect("app.db")
+    cursor = conn.cursor()
+    cursor.execute(f"PRAGMA table_info({table_name})")
+    columns = [row[1] for row in cursor.fetchall()]
+    conn.close()
+    return columns

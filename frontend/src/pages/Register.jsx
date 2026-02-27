@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-const BACKEND_URL = import.meta.env.VITE_API_URL;
-
+// const BACKEND_URL = import.meta.env.BACKEND_URL                                                 ;
+const BACKEND_URL="http://127.0.0.1:8000"
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
-    username: "", first_name: "", last_name: "", email_id: "", password: "", role: "staff",
+    username: "", first_name: "", last_name: "", email_id: "", password: ""
   });
 
   const handleChange = (e) => setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));

@@ -25,9 +25,38 @@ class Token(BaseModel):
 
 class QuestionInput(BaseModel):
     question: str
+    dataset_name: str
 
 class QueryResponse(BaseModel):
     answer: str
     sql_query: str
+    data: list[dict]
+
+class DatasetMetadata(BaseModel):
+    name: str
+    table_name: str
+    file_name: str
+    row_count: int
+    column_count: int
+    file_size: int
+    upload_date: str
     columns: list[str]
-    rows: list[list]
+
+    class Config:
+        from_attributes = True
+
+class DatasetListItem(BaseModel):
+    id: int
+    name: str
+    file_name: str
+    row_count: int
+    upload_date: str
+
+    class Config:
+        from_attributes = True
+
+class UploadResponse(BaseModel):
+    message: str
+    dataset_name: str
+    columns: list[str]
+    rows_loaded: int
